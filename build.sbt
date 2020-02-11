@@ -2,12 +2,12 @@ import Dependencies._
 
 ThisBuild / scalaVersion     := "2.13.1"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
-ThisBuild / organization     := "com.example"
-ThisBuild / organizationName := "example"
+ThisBuild / organization     := "com.slowvm"
+ThisBuild / organizationName := "Slow VM"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "Scala Seed Project",
+    name := "Slow VM",
     libraryDependencies += scalaTest % Test
   )
 
