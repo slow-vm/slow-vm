@@ -3,8 +3,8 @@ package com.slowvm.bytecode.instructions.basic
 import com.slowvm.VM
 
 /**
-  *
-  */
+ *
+ */
 trait Instruction {
   def execute(vm: VM): VM = ???
 }
@@ -15,19 +15,29 @@ abstract class Indexed(val index: Int) extends Instruction {
   // TODO: validate index is < MAXLOCALS
 }
 
-// Puts <i> in the operand stack
-case object ICONST_1 extends Instruction {
-  override def execute(vm: VM): VM =
-    vm.copy(operandStack = Seq(1) ++ vm.operandStack)
+/** Puts <i> in the operand stack */
+abstract class ICONST_n(n: Int) extends Instruction {
+  override def execute(vm: VM): VM = vm.pushOperandStack(n)
 }
-case object ICONST_3 extends Instruction
+
+case object ICONST_1 extends ICONST_n(1)
+case object ICONST_2 extends ICONST_n(2)
+case object ICONST_3 extends ICONST_n(3)
+case object ICONST_4 extends ICONST_n(4)
+case object ICONST_5 extends ICONST_n(5)
 
 // takes the int from the top of the stack and stores it into a local variable
 // The index is an unsigned byte that must be an index into the local variable
 // array  of  the  current  frame  (§2.6).  The  value  on  the  top of  the
 // operand  stack  must  be  of  type  int.  It  is  popped  from  the operand
 // stack,  and  the  value  of  the  local  variable  at  index  is  set to value.
-case class ISTORE(override val index: Int) extends Indexed(index)
+case class ISTORE(override val index: Int) extends Indexed(index) {
+  override def execute(vm: VM): VM = {
+    val top :: bottom = vm.operandStack
+    vm.copy(operandStack = bottom, localVariableArray = Seq(top))
+  }
+}
+
 case class ILOAD(override val index: Int) extends Indexed(index)
 
 case object IADD extends Instruction
