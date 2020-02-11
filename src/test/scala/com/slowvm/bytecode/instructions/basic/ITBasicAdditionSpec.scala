@@ -7,7 +7,6 @@ import org.scalatest.Matchers
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
-
 class ITBasicAdditionSpec extends FlatSpec with Matchers {
 
   behavior of "Addition (IADD)"
@@ -28,13 +27,22 @@ class ITBasicAdditionSpec extends FlatSpec with Matchers {
     // given a VM with ICONST_3 and  ICONST_5 on the operand stack
     val vm0 = VM.execute(Seq(ICONST_5, ICONST_3))
     val program = Seq(ISTORE(1), ISTORE(2))
-    vm0.execute(program) shouldBe VM().copy(localVariableArray = ArrayBuffer(3,5))
+    vm0.execute(program) shouldBe VM().copy(
+      localVariableArray = ArrayBuffer(3, 5)
+    )
+  }
+  it should "load store multiple values into the operand stack" in {
+    val vm0 = VM.execute(Seq(ICONST_5, ICONST_3, ISTORE(1), ISTORE(2)))
+    val program = Seq(ILOAD(1), ILOAD(2))
+    vm0.execute(program) shouldBe VM().copy(
+      operandStack = mutable.Stack(5, 3),
+      localVariableArray = ArrayBuffer(3, 5)
+    )
   }
 
-
-  ignore should "Load 1 and 3 and add them" in {
+  it should "Load 1 and 3 and add them" in {
     val program = Seq(
-      ICONST_1,
+      ICONST_5,
       ISTORE(1),
       ICONST_3,
       ISTORE(2),
@@ -44,7 +52,7 @@ class ITBasicAdditionSpec extends FlatSpec with Matchers {
       ISTORE(3),
     )
 
-    VM.execute(program) shouldBe VM()
+    VM.execute(program).localVariableArray.last shouldBe 8
 
   }
 }

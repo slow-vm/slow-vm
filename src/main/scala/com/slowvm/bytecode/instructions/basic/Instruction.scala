@@ -3,8 +3,8 @@ package com.slowvm.bytecode.instructions.basic
 import com.slowvm.VM
 
 /**
- *
- */
+  *
+  */
 trait Instruction {
   def execute(vm: VM): VM = ???
 }
@@ -35,6 +35,13 @@ case class ISTORE(override val index: Int) extends Indexed(index) {
   override def execute(vm: VM): VM = vm.store(index)
 }
 
-case class ILOAD(override val index: Int) extends Indexed(index)
+case class ILOAD(override val index: Int) extends Indexed(index) {
+  override def execute(vm: VM): VM = vm.load(index)
+}
 
-case object IADD extends Instruction
+case object IADD extends Instruction {
+  override def execute(vm: VM): VM = {
+    val res = vm.operandStack.take(2).map(_.asInstanceOf[Int]).sum
+    vm.copy(operandStack = vm.operandStack.push(res))
+  }
+}

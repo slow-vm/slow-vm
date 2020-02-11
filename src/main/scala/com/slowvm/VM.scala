@@ -7,8 +7,8 @@ import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 /**
- *
- */
+  *
+  */
 object VM {
   def empty = new VM()
 
@@ -18,10 +18,12 @@ object VM {
 case class VM(stack: AnyRef = null,
               localVariableArray: ArrayBuffer[Int] = ArrayBuffer(),
               operandStack: mutable.Stack[Any] = mutable.Stack.empty[Any]) {
-  // TODO: implement so it doesn't mutate
+  def load(index: Int): VM = {
+    copy(operandStack = operandStack.push(localVariableArray(index - 1)))
+  }
+
   def store(index: Int): VM = {
     val (top, bottom) = (operandStack.top, operandStack.drop(1))
-    println(operandStack)
     val newLocalVars = localVariableArray
     newLocalVars.size match {
       case s if s > index - 1 =>
@@ -40,13 +42,12 @@ case class VM(stack: AnyRef = null,
     @tailrec
     def exec0(vm: VM, program: List[Instruction]): VM = {
       program match {
-        case Nil => vm
+        case Nil          => vm
         case head :: tail => exec0(head.execute(vm), tail)
       }
     }
 
     exec0(this, program.toList)
   }
-
 
 }
