@@ -32,10 +32,7 @@ case object ICONST_5 extends ICONST_n(5)
 // operand  stack  must  be  of  type  int.  It  is  popped  from  the operand
 // stack,  and  the  value  of  the  local  variable  at  index  is  set to value.
 case class ISTORE(override val index: Int) extends Indexed(index) {
-  override def execute(vm: VM): VM = {
-    val top :: bottom = vm.operandStack
-    vm.copy(operandStack = bottom, localVariableArray = Seq(top))
-  }
+  override def execute(vm: VM): VM = vm.store(index)
 }
 
 case class ILOAD(override val index: Int) extends Indexed(index)
