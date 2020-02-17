@@ -20,6 +20,7 @@ abstract class ICONST_n(n: Int) extends Instruction {
   override def execute(vm: VM): VM = vm.pushOperandStack(n)
 }
 
+case object ICONST_0 extends ICONST_n(0)
 case object ICONST_1 extends ICONST_n(1)
 case object ICONST_2 extends ICONST_n(2)
 case object ICONST_3 extends ICONST_n(3)
@@ -45,3 +46,15 @@ case object IADD extends Instruction {
     vm.copy(operandStack = vm.operandStack.push(res))
   }
 }
+
+case object ISUB extends Instruction {
+  override def execute(vm: VM): VM = ???
+}
+
+case class BIPUSH(n: Int) extends Instruction
+
+case class NEWARRAY(theType: String) extends Instruction
+case class ASTORE(index: Int) extends Instruction
+case class ALOAD(index: Int) extends Instruction
+case object IASTORE extends Instruction
+case object IALOAD extends Instruction
